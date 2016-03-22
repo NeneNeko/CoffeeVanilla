@@ -1,38 +1,27 @@
+<pre>
 <?php
 
 require_once './Viewer/Bootstrap.php';
 
+
 $gr = $_database->query("
 
-select *, substring(na_name, 1, 1) as letter from cv_name order by letter
+select ch_name_id, ch_id
+FROM `cv_chapter`
+GROUP BY ch_name_id
+ORDER BY `ch_id` DESC limit 0,10
 
 ");
-$names = array();
-foreach ($gr->fetchAll(PDO::FETCH_ASSOC) as $name)
-    $names[$name['letter']][] = $name;
 
-foreach($names as $letter=>$name)
-{
-    echo '<p><h1>'.$letter.'</h1>';
-    foreach($name as $detail)
-        echo $detail['na_name'].'<br>';
-    echo '</p>';
-}
-//var_dump($de);
-/*
-select 
-   Substring(na_name, 1, 1) as letter
- , group_concat( na_name,'{,,}', na_name_uri, '{,,}', na_image_id separator '{,}') as name
-from
- cv_name
-group by 
- letter asc
+$de = $gr->fetchAll(PDO::FETCH_ASSOC);
+var_dump($de);
+//foreach ($de as $be)
+//echo '<pre>'.$be['ch_name_id'].'</pre>';
 
 
-
-*/
 ?>
 
+</pre>
 
 
 
