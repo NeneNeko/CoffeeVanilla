@@ -117,7 +117,7 @@ elseif($read_name)
                 $chapter['ch_title'] = 'Chapter '.$chapter['ch_number'];
             echo '<li> <a href="'.URI_PATH.'/'.$read_name.'/'.$chapter['ch_number'].'">ตอนที่ '.$chapter['ch_number'].' - '.$chapter['ch_title'].'</a>';
             if ($chapter['ch_readed'])
-                echo ' <i class="fa fa-bookmark-o"></i>', EOL;
+                echo ' <a href="/api/unread/'.$chapter['ch_id'].'" title="อ่านแล้ว คลิกเพื่อทำว่ายังไม่ได้อ่าน"><i class="fa fa-check-circle-o"></i></a>', EOL;
             echo '<time>'.DateFormat($chapter['ch_date']).'</time></il>', EOL;
             }
         echo '</ul>', EOL;

@@ -15,6 +15,14 @@ function getDatafromUri($getDataID=false)
         return $request;
     }
 
+function NametoUri($name)
+    {
+    $name = trim($name);
+    $name = strtolower($name);
+    $name = preg_replace('/\s+/', ' ', $name);
+    $name = str_replace([' - ', ' ', ':'], '-', $name );
+    return preg_replace('/[^A-Za-z0-9\-]/', '', $name );
+    }
 
 function DateFormat($mysqldate)
     {

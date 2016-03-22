@@ -32,7 +32,7 @@ switch ($action)
             {
             $getname = $_database->query("select * from ".DB_PREFIX."name where na_name_uri='".$name_uri."'");
             $name = $getname->fetch(PDO::FETCH_ASSOC);
-            echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : <a href="'.URI_PATH.'/setting/list">การจัดการและการแก้ไข</a> : '.$name['na_name'].'</h1>', EOL;
+            echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : <a href="'.URI_PATH.'/setting/list" title="จัดการและแก้ใข"><i class="fa fa-pencil"></i> </a> : '.$name['na_name'].'</h1>', EOL;
             $_title = 'การตั้งค่า - การจัดการและการแก้ไข '.$name['na_name'];
             echo '<div class="contents">', EOL;
             echo '<div class="index">', EOL;
@@ -79,7 +79,7 @@ switch ($action)
         else
             {
             $_title = 'การตั้งค่า - การจัดการและการแก้ไข';
-            echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : การจัดการและการแก้ไข</h1>', EOL;
+            echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : การจัดการและการแก้ไข</h1>', EOL;
             echo '<div class="contents">', EOL;
             echo '<div class="index">', EOL;
             echo '<ul class="article-list">', EOL;
@@ -101,7 +101,7 @@ switch ($action)
 
     case 'dbstatus' :
         $_title = 'การตั้งค่า - สถานะฐานข้อมูล';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : สถานะฐานข้อมูล</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : สถานะฐานข้อมูล</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<h2 class="title"><i class="fa fa-database"></i> ฐานข้อมูล '.strtoupper(str_replace('_', ' ', DB_NAME)).'</h2>', EOL;
@@ -152,7 +152,7 @@ switch ($action)
 
     case 'addname' :
         $_title = 'การตั้งค่า - เพิ่มเรื่องใหม่';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : เพิ่มเรื่องใหม่</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : เพิ่มเรื่องใหม่</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<form method="post" action="/api" enctype="multipart/form-data">';
@@ -179,7 +179,7 @@ switch ($action)
 
     case 'addchapter' :
         $_title = 'การตั้งค่า - เพิ่มตอนใหม่';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : เพิ่มตอนใหม่</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : เพิ่มตอนใหม่</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<form method="post" action="/api" enctype="multipart/form-data">';
@@ -205,7 +205,7 @@ switch ($action)
     case 'crop' :
         $image_id = getDatafromUri(2);
         $_title = 'การตั้งค่า - ตัดรูป หมายเลข '.$image_id;
-        echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : แก้ไขรูปภาพ</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : แก้ไขรูปภาพ</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<ul class="article-list">', EOL;
@@ -227,7 +227,7 @@ switch ($action)
 
     case 'general' :
         $_title = 'การตั้งค่า - การตั้งค่าทั่วไป';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : การตั้งค่าทั่วไป</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : การตั้งค่าทั่วไป</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<ul class="article-list">', EOL;
@@ -240,7 +240,7 @@ switch ($action)
 
     case 'about' :
         $_title = 'การตั้งค่า - เกี่ยวกับ';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/setting"><i class="fa fa-cog"></i></a> : เกี่ยวกับ Neko Viewer</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/setting" title="การตั้งค่า"><i class="fa fa-cog"></i></a> : เกี่ยวกับ Neko Viewer</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<ul class="article-list">', EOL;
@@ -273,7 +273,7 @@ switch ($action)
         echo '<ul class="article-list">', EOL;
         echo '<li><span class="icon"><i class="fa fa-plus"></i> </span><a href="'.URI_PATH.'/setting/addname">เพิ่มเรื่องใหม่</a></li>', EOL;
         echo '<li><span class="icon"><i class="fa fa-plus"></i> </span><a href="'.URI_PATH.'/setting/addchapter">เพิ่มตอนใหม่</a></li>', EOL;
-        echo '<li><span class="icon"><i class="fa fa-search"></i> </span><a href="'.URI_PATH.'/setting/list">การจัดการและการแก้ไข</a></li>', EOL;
+        echo '<li><span class="icon"><i class="fa fa-pencil"></i> </span><a href="'.URI_PATH.'/setting/list">การจัดการและการแก้ไข</a></li>', EOL;
         echo '<li><span class="icon"><i class="fa fa-cog"></i> </span><a href="'.URI_PATH.'/setting/general">การตั้งค่าทั่วไป</a></li>', EOL;
         echo '<li><span class="icon"><i class="fa fa-database"></i> </span><a href="'.URI_PATH.'/setting/dbstatus">สถานะฐานข้อมูล</a></li>', EOL;
         echo '<li><span class="icon"><i class="fa fa-info"></i> </span><a href="'.URI_PATH.'/setting/about">เกี่ยวกับ Neko Viewer</a></li>', EOL;

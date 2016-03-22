@@ -99,7 +99,7 @@ switch ($action)
             $img->execute();
             $img_id = $_database->lastInsertId();
             $input['name'] = trim($input['name']);
-            $name_uri = strtolower(str_replace([' - ', '  ', ' '], '-', (preg_replace('/[^A-Za-z0-9 \-]/', '', $input['name']))));
+            $name_uri = NametoUri($input['name']);
             $input['details']= trim($input['details']);
             $sql = "insert into ".DB_PREFIX."name (na_id, na_sub_id, na_name, na_name_uri, na_detail, na_image_id, na_uri, na_uri_template, na_last, na_end, na_date) values (null, ?, ?, ?, ?,?, ?, ?, null, '0', CURRENT_TIMESTAMP)";
             $name = $_database->prepare($sql);
@@ -118,6 +118,12 @@ switch ($action)
         {
             echo 'เพิ่มข้อมูลไม่ได้ จากข้อผิดพลาด: ' . $e->getMessage();
         }
+        break;
+
+    case 'unread':
+        $chapter_id = getDatafromUri(2);
+        $_database->query("update ".DB_PREFIX."chapter set ch_readed=0 where ch_id=".$chapter_id);
+        header('Location:'.$_SERVER['HTTP_REFERER']);
         break;
 
     case 'crop':
