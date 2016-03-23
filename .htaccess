@@ -1,7 +1,5 @@
 <IfModule mod_rewrite.c>
 RewriteEngine on
-RewriteCond %{HTTP_HOST} ^127.0.0.1:80 [NC]
-RewriteRule (.*) 127.0.0.1:81/$1 [R=302,L]
 RewriteBase /
 DirectoryIndex Index.php
 RewriteRule ^assets/(.*)$ Assets/$1 [NC,L]
