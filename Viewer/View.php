@@ -38,7 +38,7 @@ if($read_name && ($read_chapter !== False))
     $chapter= $getchapter->fetchAll(PDO::FETCH_ASSOC);
     $key = array_search($read_chapter, array_column($chapter, 'ch_number'));
     $_title = $chapter[$key]['na_name'].' ตอนที่ '.$read_chapter;
-    echo '<h1 class="title"><a href="'.URI_PATH.'/"><i class="fa fa-home"></i></a> : <a href="'.URI_PATH.'/'.$read_name.'">'.$chapter[$key]['na_name'].'</a></h1>', EOL;
+    echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : <a href="'.URI_PATH.'/'.$read_name.'">'.$chapter[$key]['na_name'].'</a></h1>', EOL;
     echo '<h2 class="title">ตอนที่ '.$read_chapter.' : '.$chapter[$key]['ch_title'].'</h2>', EOL;
     echo '<div class="contents">', EOL;
     if(isset($chapter[$key+1]['ch_number']))
@@ -72,7 +72,7 @@ elseif($read_name == 'all')
     $names = array();
     foreach ($getname->fetchAll(PDO::FETCH_ASSOC) as $name)
         $names[$name['letter']][] = $name;
-    echo '<h1 class="title"><a href="'.URI_PATH.'/"><i class="fa fa-home"></i></a> : รายชื่อทั้งหมด</h1>', EOL;
+    echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : รายชื่อทั้งหมด</h1>', EOL;
     echo '<div class="contents">', EOL;
     echo '<div class="index">', EOL;
     foreach($names as $letter=>$name)
@@ -96,11 +96,11 @@ elseif($read_name)
     if($name)
         {
         $_title = $name['na_name'];
-        echo '<h1 class="title"><a href="'.URI_PATH.'/"><i class="fa fa-home"></i></a> : '.$name['na_name'].'</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : '.$name['na_name'].'</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<ul class="article-list">', EOL;
-        echo '<li>'.$name['na_detail'].' <a href="'.$name['na_uri'].'"><i class="fa fa-globe"></i></a></li>';
+        echo '<li>'.$name['na_detail'].' <a href="'.$name['na_uri'].'" target="_blank" title="ไปยังเว็ปที่มา"><i class="fa fa-globe"></i></a></li>';
         echo '<div>', EOL;
         $getsubname = $_database->query("select * from ".DB_PREFIX."name where na_sub_id=".$name['na_id']." order by na_name asc");
         foreach ($getsubname->fetchAll(PDO::FETCH_ASSOC) as $subname)
@@ -128,7 +128,7 @@ elseif($read_name)
     else
         {
         $_title = 'ไม่พบหน้าที่ร้องขอมา';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/"><i class="fa fa-home"></i></a> : เกิดข้อผิดพลาด</h1>', EOL;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : เกิดข้อผิดพลาด</h1>', EOL;
         echo '<div class="contents">', EOL;
         echo '<div class="index">', EOL;
         echo '<h2 class="center"><i class="fa fa-exclamation-triangle"></i> ไม่พบหน้าที่ร้องขอมา</h2>', EOL;
