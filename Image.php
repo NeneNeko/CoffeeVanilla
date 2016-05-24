@@ -27,7 +27,8 @@ switch ($image['im_type'])
         break;
     case 'flif' :
         $mimetype = 'image/flif';
-        break;    case 'jpg' :
+        break;
+    case 'jpg' :
     default:
         $mimetype = 'image/jpeg';
         break;

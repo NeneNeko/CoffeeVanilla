@@ -20,24 +20,36 @@ function NametoUri($name)
     $name = trim($name);
     $name = strtolower($name);
     $name = preg_replace('/\s+/', ' ', $name);
-    $name = str_replace([' - ', ' ', ':'], '-', $name );
+    $name = str_replace([' - ', ' : ',' ', ':'], '-', $name );
     return preg_replace('/[^A-Za-z0-9\-]/', '', $name );
     }
 
 function DateFormat($mysqldate)
     {
-    return date( 'd-m-Y H:i:s', strtotime( $mysqldate ) );
+    return date( 'd-m-y H:i:s', strtotime( $mysqldate ) );
     }
-
 
 function limitText ( $text )
     {
     if ( strlen ( $text ) > 20 )
-        return mb_substr ( $text, 0, 15 ).'...'.mb_substr ( $text, -5 );
+        return mb_substr ( $text, 0, 12 ).'...'.mb_substr ( $text, -5 );
     else
         return $text;
     }
 
+function checked($value, $choise='true,false')
+    {
+    $choise = toArray($choise);
+    $checked = array();
+    foreach($choise as $check)
+        {
+        if($value==$check)
+            $checked[$check] = ' checked';
+        else
+            $checked[$check] = '';
+        }
+    return $checked;
+    }
 
 /**
 * Converts bytes into human readable file size.

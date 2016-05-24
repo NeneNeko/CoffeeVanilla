@@ -5,7 +5,7 @@ $_assetmodule = array();
 ########### Jquery ############
 $_module = array();
 $_module['path'] = 'jquery';
-$_module['js'][] = 'jquery-2.2.1.js';
+$_module['js'][] = 'jquery-2.2.3.js';
 $_assetmodule['jquery'] = $_module;
 
 ########### Font-Awesome ############

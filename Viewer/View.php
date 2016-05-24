@@ -29,7 +29,7 @@ if($read_name && ($read_chapter !== False))
     {
     $getchapter = $_database->query("
     select ".DB_PREFIX."name.na_id, ".DB_PREFIX."name.na_name, ".DB_PREFIX."chapter.ch_name_id, ".DB_PREFIX."chapter.ch_number,
-    ".DB_PREFIX."chapter.ch_title, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_image_id
+    ".DB_PREFIX."chapter.ch_title, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_content
     from ".DB_PREFIX."name inner join ".DB_PREFIX."chapter
     on ".DB_PREFIX."name.na_id=".DB_PREFIX."chapter.ch_name_id
     where ".DB_PREFIX."name.na_name_uri='".$read_name."'
@@ -49,7 +49,7 @@ if($read_name && ($read_chapter !== False))
     echo '<div class="index">', EOL;
     echo '<ul class="article-list">', EOL;
     $_database->query("update cv_chapter set ch_readed=1 where ch_id=".$chapter[$key]['ch_id']);
-    foreach ( toArray($chapter[$key]['ch_image_id']) as $page=>$image)
+    foreach ( toArray($chapter[$key]['ch_content']) as $page=>$image)
         {
         echo '<li>'.($page+1).' <a class="delete" href="/api/deleteimg/'.$chapter[$key]['ch_id'].'/'.$image.'" title="ลบรูป"> <i class="fa fa-times"></i></a>';
         echo '<a href="/setting/crop/'.$image.'" title="ตัดรูป" target="_blank"> <i class="fa fa-crop"></i></a>';
@@ -71,7 +71,11 @@ elseif($read_name == 'all')
     $getname = $_database->query("select na_name, na_name_uri, na_end, substring(na_name, 1, 1) as letter from ".DB_PREFIX."name order by na_name asc");
     $names = array();
     foreach ($getname->fetchAll(PDO::FETCH_ASSOC) as $name)
-        $names[$name['letter']][] = $name;
+        if(ord(strtoupper($name['letter'])) <= 90 && ord(strtoupper($name['letter'])) >= 65)
+            $names[$name['letter']][] = $name;
+        else
+            $names['#'][] = $name;
+    ksort($names);
     echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : รายชื่อทั้งหมด</h1>', EOL;
     echo '<div class="contents">', EOL;
     echo '<div class="index">', EOL;
@@ -128,13 +132,8 @@ elseif($read_name)
     else
         {
         $_title = 'ไม่พบหน้าที่ร้องขอมา';
-        echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : เกิดข้อผิดพลาด</h1>', EOL;
-        echo '<div class="contents">', EOL;
-        echo '<div class="index">', EOL;
-        echo '<h2 class="center"><i class="fa fa-exclamation-triangle"></i> ไม่พบหน้าที่ร้องขอมา</h2>', EOL;
-        echo '</div>', EOL;
-        echo '<div class="clear"></div>', EOL;
-        echo '</div>', EOL;
+        $_error = 'ไม่พบหน้าที่ร้องขอมา';
+        require_once 'Viewer/Error.php';
         }
     }
 else
@@ -161,3 +160,4 @@ echo '</div>', EOL;
 echo '</div>', EOL;
 echo '</section>', EOL;
 
+?>

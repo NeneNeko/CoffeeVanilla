@@ -45,8 +45,8 @@ switch ($action)
             {
             $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_id=".$chapter_id);
             $chapter = $getchapter->fetch(PDO::FETCH_ASSOC);
-            $blob_id = array_diff(toArray($chapter['ch_image_id']), toArray($image_id));
-            $_database->query("update ".DB_PREFIX."chapter set ch_image_id ='".implode(',', $blob_id)."' where ".DB_PREFIX."chapter.ch_id=".$chapter_id);
+            $blob_id = array_diff(toArray($chapter['ch_content']), toArray($image_id));
+            $_database->query("update ".DB_PREFIX."chapter set ch_content ='".implode(',', $blob_id)."' where ".DB_PREFIX."chapter.ch_id=".$chapter_id);
             $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
             header('Location:'.$_SERVER['HTTP_REFERER']);
             }
@@ -58,7 +58,7 @@ switch ($action)
             {
             $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_id=".$chapter_id);
             $chapter = $getchapter->fetch(PDO::FETCH_ASSOC);
-            foreach (toArray($chapter['ch_image_id']) as $image_id)
+            foreach (toArray($chapter['ch_content']) as $image_id)
                 $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
             $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$chapter_id);
             header('Location:'.$_SERVER['HTTP_REFERER']);
@@ -73,7 +73,7 @@ switch ($action)
             $chapters = $getchapter->fetchAll(PDO::FETCH_ASSOC);
             foreach ($chapters as $chapter)
                 {
-                foreach (toArray($chapter['ch_image_id']) as $image_id)
+                foreach (toArray($chapter['ch_content']) as $image_id)
                     $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
                 $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$name_id);
                 }
@@ -157,7 +157,7 @@ switch ($action)
             {
             $getchapter = $_database->query("
             select ".DB_PREFIX."name.na_id, ".DB_PREFIX."name.na_name, ".DB_PREFIX."chapter.ch_name_id,
-            ".DB_PREFIX."chapter.ch_number, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_image_id
+            ".DB_PREFIX."chapter.ch_number, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_content
             from ".DB_PREFIX."name inner join ".DB_PREFIX."chapter
             on ".DB_PREFIX."name.na_id=".DB_PREFIX."chapter.ch_name_id
             where ".DB_PREFIX."chapter.ch_id=".$chapter_id."");
@@ -166,7 +166,7 @@ switch ($action)
             $zipData = new ZipArchive;
             $zipData->open ( $filename, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE );
             $zipData->setArchiveComment ( $chapter['na_name'].' - '.stringPad(floatval($chapter['ch_number'])).EOL.'Created by NekoViewer');
-            foreach ( toArray($chapter['ch_image_id']) as $id=>$image_id )
+            foreach ( toArray($chapter['ch_content']) as $id=>$image_id )
                 {
                 $getid = $_database->query("select * from ".DB_PREFIX."image where im_id=".$image_id);
                 $image = $getid->fetch(PDO::FETCH_ASSOC);
@@ -189,7 +189,7 @@ switch ($action)
             {
             $getchapter = $_database->query("
             select ".DB_PREFIX."name.na_id, ".DB_PREFIX."name.na_name, ".DB_PREFIX."chapter.ch_name_id,
-            ".DB_PREFIX."chapter.ch_number, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_image_id
+            ".DB_PREFIX."chapter.ch_number, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_content
             from ".DB_PREFIX."name inner join ".DB_PREFIX."chapter
             on ".DB_PREFIX."name.na_id=".DB_PREFIX."chapter.ch_name_id
             where ".DB_PREFIX."name.na_id=".$name_id."");
@@ -200,7 +200,7 @@ switch ($action)
                 $zipData = new ZipArchive;
                 $zipData->open ( $filename, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE );
                 $zipData->setArchiveComment ( $chapter['na_name'].' - '.stringPad(floatval($chapter['ch_number'])).EOL.'Created by NekoViewer');
-                foreach ( toArray($chapter['ch_image_id']) as $id=>$image_id )
+                foreach ( toArray($chapter['ch_content']) as $id=>$image_id )
                     {
                     $getid = $_database->query("select * from ".DB_PREFIX."image where im_id=".$image_id);
                     $image = $getid->fetch(PDO::FETCH_ASSOC);
@@ -223,14 +223,14 @@ switch ($action)
             {
             $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_id in (".implode(',', $chapter_id).") order by ch_number asc");
             $chapters = $getchapter->fetchAll(PDO::FETCH_ASSOC);
-            $ch_image_id = array();
+            $ch_content = array();
             $ch_image_uri = array();
             foreach ($chapters as $chapter)
                 {
-                $ch_image_id = array_merge($ch_image_id , toArray($chapter['ch_image_id']));
+                $ch_content = array_merge($ch_content , toArray($chapter['ch_content']));
                 $ch_image_uri = array_merge($ch_image_uri, unserialize($chapter['ch_image_uri']));
                 }
-           $_database->query("update ".DB_PREFIX."chapter set ch_image_id='".implode(',', $ch_image_id)."', ch_image_uri='".serialize($ch_image_uri)."' where ".DB_PREFIX."chapter.ch_id=".$chapter_id[0]);
+           $_database->query("update ".DB_PREFIX."chapter set ch_content='".implode(',', $ch_content)."', ch_image_uri='".serialize($ch_image_uri)."' where ".DB_PREFIX."chapter.ch_id=".$chapter_id[0]);
             for($i=1;$i<count($chapter_id);$i++)
                 $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$chapter_id[$i]);
             echo 'รวมตอน '.getDatafromUri(2).' สำเร็จ';
@@ -239,6 +239,12 @@ switch ($action)
             {
             echo 'จำนวนตอนที่รวมไม่ถูกต้อง';
             }
+        break;
+
+    case 'savesetting':
+        foreach ($input['setting'] as $keyname=>$value)
+            $_database->query("update cv_setting set se_variable= '".$value."' where cv_setting.se_name= '".$keyname."'");
+        header('Location:'.$_SERVER['HTTP_REFERER']);
         break;
 
     default:

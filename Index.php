@@ -35,3 +35,5 @@ switch ($action)
 $contents_data = ob_get_contents();
 ob_end_clean();
 require_once 'Viewer/Theme.php';
+
+?>
