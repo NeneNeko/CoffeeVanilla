@@ -1,32 +1,13 @@
 <?php
 
-$_assets[] = 'font-awesome';
-$_assets[] = 'jquery';
-$_assets[] = 'pace';
-$_assets[] = 'flif';
-$_assets[] = 'bpg';
-$_assets[] = 'prettyPhoto';
-$_assets[] = 'colortip';
-$_assets[] = 'lazyload';
-$_assets[] = 'common';
-
-$_mainmenu[] = ['หน้าหลัก', URI_PATH.'/', 1];
-$_mainmenu[] = ['รายชื่อทั้งหมด', URI_PATH.'/all', 0];
-$_mainmenu[] = ['การตั้งค่า', URI_PATH.'/setting', 0];
-$_mainmenu[] = ['สถานะฐานข้อมูล', URI_PATH.'/setting/dbstatus', 0];
-$_mainmenu[] = ['เกี่ยวกับ', URI_PATH.'/setting/about', 0];
-
-echo '<section class="main container_12">', EOL;
-echo '<div class="row">', EOL;
-echo '<div class="area-header"></div>', EOL;
-echo '<div class="block-contents">', EOL;
-echo '<div class="bg-contents"></div>', EOL;
-
-$read_name = getDatafromUri(0);
+$read_name = NametoUri(getDatafromUri(0));
 $read_chapter = getDatafromUri(1);
 
-if($read_name && ($read_chapter !== False))
+if($read_name && ($read_chapter !== false))
     {
+    $read_chapter = floatval($read_chapter);
+    $_assets[] = 'prettyPhoto';
+    $_assets[] = 'lazyload';
     $getchapter = $_database->query("
     select ".DB_PREFIX."name.na_id, ".DB_PREFIX."name.na_name, ".DB_PREFIX."chapter.ch_name_id, ".DB_PREFIX."chapter.ch_number,
     ".DB_PREFIX."chapter.ch_title, ".DB_PREFIX."chapter.ch_id, ".DB_PREFIX."chapter.ch_content
@@ -35,40 +16,50 @@ if($read_name && ($read_chapter !== False))
     where ".DB_PREFIX."name.na_name_uri='".$read_name."'
     and (".DB_PREFIX."chapter.ch_number>=".($read_chapter-1)." and ".DB_PREFIX."chapter.ch_number<=".($read_chapter+1).")
     order by ".DB_PREFIX."chapter.ch_number asc");
-    $chapter= $getchapter->fetchAll(PDO::FETCH_ASSOC);
-    $key = array_search($read_chapter, array_column($chapter, 'ch_number'));
-    $_title = $chapter[$key]['na_name'].' ตอนที่ '.$read_chapter;
-    echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : <a href="'.URI_PATH.'/'.$read_name.'">'.$chapter[$key]['na_name'].'</a></h1>', EOL;
-    echo '<h2 class="title">ตอนที่ '.$read_chapter.' : '.$chapter[$key]['ch_title'].'</h2>', EOL;
-    echo '<div class="contents">', EOL;
-    if(isset($chapter[$key+1]['ch_number']))
-        echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key+1]['ch_number']).'">Next <i class="fa fa-share"></i></a></div>', EOL;
-    if(isset($chapter[$key-1]['ch_number']))
-        echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key-1]['ch_number']).'"><i class="fa fa-reply"></i>Back</a></div>', EOL;
-    echo '<div class="clear"></div>', EOL;
-    echo '<div class="index">', EOL;
-    echo '<ul class="article-list">', EOL;
-    $_database->query("update cv_chapter set ch_readed=1 where ch_id=".$chapter[$key]['ch_id']);
-    foreach ( toArray($chapter[$key]['ch_content']) as $page=>$image)
+    $chapter = $getchapter->fetchAll(PDO::FETCH_ASSOC);
+    if ($chapter )
         {
-        echo '<li>'.($page+1).' <a class="delete" href="/api/deleteimg/'.$chapter[$key]['ch_id'].'/'.$image.'" title="ลบรูป"> <i class="fa fa-times"></i></a>';
-        echo '<a href="/setting/crop/'.$image.'" title="ตัดรูป" target="_blank"> <i class="fa fa-crop"></i></a>';
-        echo '<br><a rel="prettyPhoto[pp_gal]" title="" href="'.URI_PATH.'/image/'.$image.'">';
-        echo '<img class="lazy" data-original="'.URI_PATH.'/image/'.$image.'" width="100%" border="0"></a></il>', EOL;
+        $key = array_search($read_chapter, array_column($chapter, 'ch_number'));
+        $_title = $chapter[$key]['na_name'].' ตอนที่ '.$read_chapter;
+        echo '<h1 class="title"><a href="'.URI_PATH.'/" title="กลับหน้าแรก"><i class="fa fa-home"></i></a> : <a href="'.URI_PATH.'/'.$read_name.'">'.$chapter[$key]['na_name'].'</a></h1>', EOL;
+        echo '<h2 class="title">ตอนที่ '.$read_chapter.' : '.$chapter[$key]['ch_title'].'</h2>', EOL;
+        echo '<div class="contents">', EOL;
+        if(isset($chapter[$key+1]['ch_number']))
+            echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key+1]['ch_number']).'">Next <i class="fa fa-share"></i></a></div>', EOL;
+        if(isset($chapter[$key-1]['ch_number']))
+            echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key-1]['ch_number']).'"><i class="fa fa-reply"></i>Back</a></div>', EOL;
+        echo '<div class="clear"></div>', EOL;
+        echo '<div class="index">', EOL;
+        echo '<ul class="article-list">', EOL;
+        $_database->query("update cv_chapter set ch_readed=1 where ch_id=".$chapter[$key]['ch_id']);
+        foreach ( toArray($chapter[$key]['ch_content']) as $page=>$image)
+            {
+            echo '<li>'.($page+1).' <a class="delete" href="'.URI_PATH.'/api/deleteimg/'.$chapter[$key]['ch_id'].'/'.$image.'" title="ลบรูป"> <i class="fa fa-times"></i></a>';
+            echo '<a href="/setting/crop/'.$image.'" title="ตัดรูป" target="_blank"> <i class="fa fa-crop"></i></a>';
+            echo '<br><a rel="prettyPhoto[pp_gal]" title="" href="'.URI_PATH.'/image/'.$image.'">';
+            echo '<img class="lazy" data-original="'.URI_PATH.'/image/'.$image.'" width="100%" border="0"></a></il>', EOL;
+            }
+        echo '</ul>', EOL;
+        echo '</div>', EOL;
+        if(isset($chapter[$key+1]['ch_number']))
+            echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key+1]['ch_number']).'">Next <i class="fa fa-share"></i></a></div>', EOL;
+        if(isset($chapter[$key-1]['ch_number']))
+            echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key-1]['ch_number']).'"><i class="fa fa-reply"></i>Back</a></div>', EOL;
+        echo '<div class="clear"></div>', EOL;
+        echo '</div>', EOL;
         }
-    echo '</ul>', EOL;
-    echo '</div>', EOL;
-    if(isset($chapter[$key+1]['ch_number']))
-        echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key+1]['ch_number']).'">Next <i class="fa fa-share"></i></a></div>', EOL;
-    if(isset($chapter[$key-1]['ch_number']))
-        echo '<div class="archive-link"><a href="'.URI_PATH.'/'.$read_name.'/'.floatval($chapter[$key-1]['ch_number']).'"><i class="fa fa-reply"></i>Back</a></div>', EOL;
-    echo '<div class="clear"></div>', EOL;
-    echo '</div>', EOL;
+     else
+        {
+        $_title = 'ไม่พบหน้าที่ร้องขอมา';
+        $_error_message = 'ไม่พบหน้าที่ร้องขอมาหรือหน้านี้ถูกลบไปแล้ว';
+        require_once 'Viewer/Error.php';
+        }
     }
 elseif($read_name == 'all')
     {
     $_title = 'รายชื่อทั้งหมด';
-    $getname = $_database->query("select na_name, na_name_uri, na_end, substring(na_name, 1, 1) as letter from ".DB_PREFIX."name order by na_name asc");
+    $_mainactive = '2';
+    $getname = $_database->query("select na_name, na_name_uri, na_last, na_end, substring(na_name, 1, 1) as letter from ".DB_PREFIX."name where na_visible='true' order by na_name asc");
     $names = array();
     foreach ($getname->fetchAll(PDO::FETCH_ASSOC) as $name)
         if(ord(strtoupper($name['letter'])) <= 90 && ord(strtoupper($name['letter'])) >= 65)
@@ -84,8 +75,8 @@ elseif($read_name == 'all')
         echo '<div><h1>'.$letter.'</h1>', EOL;
         foreach($name as $detail)
             {
-            $end = $detail['na_end'] ? '<span style="color:green">(End)</span>' : '';
-            echo '<div> <a href="'.URI_PATH.'/'.$detail['na_name_uri'].'">'.$detail['na_name'].'</a> '.$end.'</div>', EOL;
+            $end = selfBool($detail['na_end']) ? '<span style="color:green">(End)</span>' : '';
+            echo '<div> <a href="'.URI_PATH.'/'.$detail['na_name_uri'].'">'.$detail['na_name'].'</a> '.floatval($detail['na_last']).' '.$end.'</div>', EOL;
             }
         echo '</div><br/>', EOL;
     }
@@ -121,7 +112,7 @@ elseif($read_name)
                 $chapter['ch_title'] = 'Chapter '.$chapter['ch_number'];
             echo '<li> <a href="'.URI_PATH.'/'.$read_name.'/'.$chapter['ch_number'].'">ตอนที่ '.$chapter['ch_number'].' - '.$chapter['ch_title'].'</a>';
             if ($chapter['ch_readed'])
-                echo ' <a href="/api/unread/'.$chapter['ch_id'].'" title="อ่านแล้ว คลิกเพื่อทำว่ายังไม่ได้อ่าน"><i class="fa fa-check-circle-o"></i></a>', EOL;
+                echo ' <a href="'.URI_PATH.'/api/unread/'.$chapter['ch_id'].'" title="อ่านแล้ว คลิกเพื่อทำว่ายังไม่ได้อ่าน"><i class="fa fa-check-circle-o"></i></a>', EOL;
             echo '<time>'.DateFormat($chapter['ch_date']).'</time></il>', EOL;
             }
         echo '</ul>', EOL;
@@ -132,7 +123,7 @@ elseif($read_name)
     else
         {
         $_title = 'ไม่พบหน้าที่ร้องขอมา';
-        $_error = 'ไม่พบหน้าที่ร้องขอมา';
+        $_error_message = 'ไม่พบหน้าที่ร้องขอมาหรือหน้านี้ถูกลบไปแล้ว';
         require_once 'Viewer/Error.php';
         }
     }
@@ -143,12 +134,23 @@ else
     echo '<div class="contents">', EOL;
     echo '<div class="index center">', EOL;
     echo '<div class="left">', EOL;
-    $getname = $_database->query("select * from ".DB_PREFIX."name where na_sub_id=0 order by na_name asc");
-    foreach ($getname->fetchAll(PDO::FETCH_ASSOC) as $name)
+    $getname = $_database->query("select * from ".DB_PREFIX."name where na_sub_id=0 and na_visible='true' order by na_name asc");
+    if($names = $getname->fetchAll(PDO::FETCH_ASSOC))
         {
-        $block = $name['na_end'] ? 'name-block ended' : 'name-block';
-        echo '<div class="'.$block .'"> <a href="'.URI_PATH.'/'.$name['na_name_uri'].'">';
-        echo '<img src="'.URI_PATH.'/image/'.$name['na_image_id'].'" width="200" height="285" border="0">'.limitText($name['na_name']).'</a></div>', EOL;
+        foreach ($names as $name)
+            {
+            $block = selfBool($name['na_end']) ? 'name-block ended' : 'name-block';
+            if($name['na_image_id'] == '0' )
+                $image_cover = URI_PATH.'/image/2';
+            else
+                $image_cover = URI_PATH.'/image/'.$name['na_image_id'];
+            echo '<div class="'.$block .' "> <a href="'.URI_PATH.'/'.$name['na_name_uri'].'">';
+            echo '<img src="'.$image_cover.'" width="200" height="285" border="0">'.limitText($name['na_name']).'</a></div>', EOL;
+            }
+        }
+    else
+        {
+        echo '<div><i class="fa fa-plus"></i> <a href="'.URI_PATH.'/setting/name/add">เพิ่มเรื่องใหม่</a></div>', EOL;
         }
     echo '</div>', EOL;
     echo '</div>', EOL;
@@ -156,8 +158,5 @@ else
     echo '</div>', EOL;
     }
 
-echo '</div>', EOL;
-echo '</div>', EOL;
-echo '</section>', EOL;
 
 ?>

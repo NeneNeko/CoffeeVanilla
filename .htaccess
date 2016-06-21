@@ -1,14 +1,13 @@
-<IfModule mod_rewrite.c>
 RewriteEngine on
 RewriteCond %{HTTP_HOST} ^127.0.0.1:80 [NC]
 RewriteRule (.*) 127.0.0.1:81/$1 [R=302,L]
 RewriteBase /
 DirectoryIndex Index.php
-RewriteRule ^assets/(.*)$ Assets/$1 [NC,L]
+RewriteRule ^assets/(.*) Assets/$1 [NC,L]
 RewriteRule ^image(.*) Image.php?$1 [L]
 RewriteRule ^api(.*) Controller.php?$1 [QSA,L]
 RewriteRule ^test(.*) Testscript.php?$1 [QSA,L]
-ErrorDocument 404 /Index.php
-</IfModule>
-
-AddType image/webp .webp
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+RewriteRule . Index.php [L]

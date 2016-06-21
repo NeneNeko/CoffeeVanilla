@@ -2,7 +2,7 @@
 
 function getDatafromUri($getDataID=false)
     {
-    $request = $_SERVER["REQUEST_URI"];
+    $request = $_SERVER['REQUEST_URI'];
     if(substr($request, 0, 1) == '/') 
         $request = substr($request, 1);
     $request = explode('/', $request);
@@ -20,7 +20,7 @@ function NametoUri($name)
     $name = trim($name);
     $name = strtolower($name);
     $name = preg_replace('/\s+/', ' ', $name);
-    $name = str_replace([' - ', ' : ',' ', ':'], '-', $name );
+    $name = str_replace(['--',' - ', ' : ',' ', ':'], '-', $name );
     return preg_replace('/[^A-Za-z0-9\-]/', '', $name );
     }
 
@@ -103,15 +103,27 @@ function FileSizeConvert($bytes)
             }
         }
 
- /** arrayChangeIndex
-    * arrayChangeIndex
+ /** increaseIndex
+    * Change array index to 1
+    *
+    * @param array $array
+    * @return array
+    * @author Mr. Alien
+    */
+    function increaseIndex ( $array )
+        {
+        return array_combine ( range( 1, count ( $array ) ), $array );
+        }
+
+ /** mtrim
+    * Multidimensional arrays trim with recursive function
     *
     * @param array $array
     * @return array
     */
-    function arrayChangeIndex ( $array )
+    function mtrim ( $array )
         {
-        return array_combine ( range( 1, count ( $array ) ), $array );
+        return is_array ( $array ) ? array_map ( 'mtrim', $array ) : trim($array);
         }
 
  /** toArray
@@ -136,6 +148,18 @@ function FileSizeConvert($bytes)
         {
         return str_pad ( (int) $string, '3', '0', STR_PAD_LEFT ).strrchr ( $string, '.' );
         }
+
+/**
+* Convert string to boolean
+*
+* @param string $string
+* @return boolean
+* @author DevellMen
+*/
+    function selfBool($string) {
+        return filter_var($string, FILTER_VALIDATE_BOOLEAN);
+    }
+
 /**
  * Autoloader - Simple class autoloading function (PHP 5.4+)
  *

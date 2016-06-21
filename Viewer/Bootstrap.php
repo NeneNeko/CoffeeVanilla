@@ -1,5 +1,6 @@
 <?php
 
+ob_start();
 session_start();
 error_reporting ( E_ALL );
 set_time_limit ( 0 );
@@ -8,11 +9,20 @@ date_default_timezone_set ( 'Asia/Bangkok' );
 
 $_assets = array();
 $_mainmenu = array();
+$_fatalerror = false;
 
 require_once 'Config.php';
-require_once 'Assets/Assets.php';
 require_once 'Viewer/Function.php';
-require_once 'Viewer/PHPImage.php';
+require_once 'Viewer/Library/php-image/PHPImage.php';
+require_once 'Viewer/Library/parsedown/Parsedown.php';
+
+if(!in_array('mod_rewrite', apache_get_modules()))
+    {
+    $_title = 'ยังไม่เปิดการใช้งาน mod_rewrite';
+    $_error_message = 'ยังไม่เปิดการใช้งาน mod_rewrite เช็คการเปิดใช้งาน webservice';
+    $_fatalerror = true;
+    require_once 'Viewer/Error.php';
+    }
 
 // เชื่อมต่อฐานข้อมูล
 try
@@ -26,7 +36,22 @@ try
     }
 catch (PDOException $e)
     {
-    echo 'เชื่อมต่อกับฐานข้อมูลไม่ได้ จากข้อผิดพลาด: ' . $e->getMessage();
+    $_title = 'เชื่อมต่อกับฐานข้อมูลไม่ได้';
+    $_error_message = 'เชื่อมต่อกับฐานข้อมูลไม่ได้ จากข้อผิดพลาด: ' . $e->getMessage();
+    $_fatalerror = true;
+    require_once 'Viewer/Error.php';
     }
 
+require_once 'Assets/Assets.php';
+$_assets[] = 'font-awesome';
+$_assets[] = 'jquery';
+$_assets[] = 'colortip';
+$_assets[] = 'common';
+$_assets[] = 'pace';
 
+# เมนูหลักเริ่มต้นที่ลำดับ 1
+$_mainmenu[] = ['หน้าหลัก', URI_PATH.'/'];
+$_mainmenu[] = ['รายชื่อทั้งหมด', URI_PATH.'/all'];
+$_mainmenu[] = ['การตั้งค่า', URI_PATH.'/setting'];
+$_mainmenu[] = ['เกี่ยวกับ', URI_PATH.'/setting/about'];
+$_mainactive = '1';

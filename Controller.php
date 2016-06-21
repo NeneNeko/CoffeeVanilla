@@ -2,7 +2,7 @@
 
 require_once './Viewer/Bootstrap.php';
 
-$input = filter_input_array(INPUT_POST);
+$input = mtrim(filter_input_array(INPUT_POST));
 $action = isset($input['action']) ? $input['action'] : getDatafromUri(1);
 
 switch ($action)
@@ -39,8 +39,8 @@ switch ($action)
         break;
 
     case 'deleteimg':
-        $chapter_id = getDatafromUri(2);
-        $image_id = getDatafromUri(3);
+        $chapter_id = (int)getDatafromUri(2);
+        $image_id = (int)getDatafromUri(3);
         if($chapter_id && $image_id)
             {
             $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_id=".$chapter_id);
@@ -53,7 +53,7 @@ switch ($action)
         break;
 
     case 'deletechapter':
-        $chapter_id = getDatafromUri(2);
+        $chapter_id = (int)getDatafromUri(2);
         if($chapter_id)
             {
             $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_id=".$chapter_id);
@@ -65,70 +65,151 @@ switch ($action)
             }
         break;
 
-    case 'deletename':
-        $name_id = getDatafromUri(2);
-        if($name_id)
+    case 'name':
+        $mode = NametoUri(getDatafromUri(2));
+        CreateDirectory($_settings['cache_directory']);
+        $filename = $_settings['cache_directory'].'/temp_cover.jpg';
+        switch($mode)
             {
-            $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_name_id=".$name_id);
-            $chapters = $getchapter->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($chapters as $chapter)
-                {
-                foreach (toArray($chapter['ch_content']) as $image_id)
-                    $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
-                $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$name_id);
-                }
-            $getname = $_database->query("select * from ".DB_PREFIX."name where na_id=".$name_id);
-            $name = $getname->fetch(PDO::FETCH_ASSOC);
-            $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$name['na_image_id']);
-            $_database->query("delete from ".DB_PREFIX."name where ".DB_PREFIX."name.na_id=".$name_id);
-            header('Location:'.$_SERVER['HTTP_REFERER']);
+            case 'edit':
+                $namedata = json_decode(base64_decode($input['namedata']), true);
+                if($namedata['na_image_id'])
+                    $image_id = $namedata['na_image_id'];
+                 try
+                    {
+                    if($_FILES['cover']['tmp_name'])
+                        {
+                        move_uploaded_file($_FILES['cover']['tmp_name'], $filename);
+                        $image = new PHPImage($filename);
+                        $image->resize(300, 400, true, true);
+                        $image->setOutput('jpg', 90);
+                        $image->save($filename, false, false);
+                        $cover = file_get_contents($filename);
+                        if($namedata['na_image_id'] == '0')
+                            {
+                            $sql = "insert into ".DB_PREFIX."image (im_id, im_image, im_type) values (null, :image, :extension)";
+                            $img = $_database->prepare($sql);
+                            $img->bindParam(':image', $cover, PDO::PARAM_LOB);
+                            $img->bindValue(':extension', 'jpg', PDO::PARAM_STR);
+                            $img->execute();
+                            $image_id = $_database->lastInsertId();
+                            } 
+                        else
+                            {
+                            $sql = "update ".DB_PREFIX."image set im_image=:image where im_id=:id";
+                            $img = $_database->prepare($sql);
+                            $img->bindParam(':image', $cover, PDO::PARAM_LOB);
+                            $img->bindParam(':id', $namedata['na_image_id'], PDO::PARAM_INT);
+                            $img->execute();
+                            }
+                            unlink($filename);
+                        }
+                    $sql = "update cv_name set na_type=:type, na_sub_id=:sub_id, na_visible=:visible, na_name=:name, na_name_uri=:name_uri, na_detail=:details, na_image_id=:image_id, na_uri=:uri, na_uri_template=:uri_template, na_last=:last, na_end=:end where na_id=:id";
+                    $name = $_database->prepare($sql);
+                    $name->bindParam(':type', $input['type'], PDO::PARAM_STR);
+                    $name->bindParam(':sub_id', $input['sub_id'], PDO::PARAM_INT);
+                    $name->bindParam(':visible', $input['visible'], PDO::PARAM_STR);   
+                    $name->bindParam(':name', $input['name'], PDO::PARAM_STR);
+                    $name->bindParam(':name_uri', $input['name_uri'], PDO::PARAM_STR);
+                    $name->bindParam(':details', $input['details'], PDO::PARAM_STR);
+                    $name->bindParam(':image_id', $image_id, PDO::PARAM_STR);
+                    $name->bindParam(':uri', $input['uri'], PDO::PARAM_STR);
+                    $name->bindParam(':uri_template', $input['uri_template'], PDO::PARAM_STR);
+                    $name->bindParam(':last', $input['last'], PDO::PARAM_INT);
+                    $name->bindParam(':end', $input['end'], PDO::PARAM_STR);
+                    $name->bindParam(':id', $namedata['na_id'], PDO::PARAM_INT);
+                    $name->execute();
+                    header('Location:'.$_SERVER['HTTP_REFERER']);
+                    }
+                catch (PDOException $e)
+                    {
+                    $_title = 'เพิ่มข้อมูลไม่ได้';
+                    $_error_message = 'เพิ่มข้อมูลไม่ได้ จากข้อผิดพลาด: ' . $e->getMessage();
+                    require_once 'Viewer/Error.php';
+                    }
+                break;
+            case 'add':
+                try
+                    {
+                    if($_FILES['cover']['tmp_name'])
+                        {
+                        move_uploaded_file($_FILES['cover']['tmp_name'], $filename);
+                        $image = new PHPImage($filename);
+                        $image->resize(300, 400, true, true);
+                        $image->setOutput('jpg', 90);
+                        $image->save($filename, false, false);
+                        $cover = file_get_contents($filename);
+                        $sql = "insert into ".DB_PREFIX."image (im_id, im_image, im_type) values (null, :image, :extension)";
+                        $img = $_database->prepare($sql);
+                        $img->bindParam(':image', $cover, PDO::PARAM_LOB);
+                        $img->bindValue(':extension', 'jpg', PDO::PARAM_STR);
+                        $img->execute();
+                        $image_id = $_database->lastInsertId();
+                        unlink($filename);
+                        }
+                    else
+                        {
+                        $image_id = '0';
+                        }
+                    $input['name'] = trim($input['name']);
+                    $name_uri = NametoUri($input['name']);
+                    $input['details']= trim($input['details']);
+                    $sql = "insert into ".DB_PREFIX."name (na_id, na_type, na_sub_id, na_visible, na_name, na_name_uri, na_detail, na_image_id, na_uri, na_uri_template, na_last, na_end, na_date, na_last_date) values (null, :type, :sub_id, :visible, :name, :name_uri, :details, :image_id, :uri, :uri_template, null, 'false', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+                    $name = $_database->prepare($sql);
+                    $name->bindParam(':type', $input['type'], PDO::PARAM_STR);
+                    $name->bindParam(':sub_id', $input['sub_id'], PDO::PARAM_INT);
+                    $name->bindParam(':visible', $input['visible'], PDO::PARAM_STR);                   
+                    $name->bindParam(':name', $input['name'], PDO::PARAM_STR);
+                    $name->bindParam(':name_uri', $name_uri, PDO::PARAM_STR);
+                    $name->bindParam(':details', $input['details'], PDO::PARAM_STR);
+                    $name->bindParam(':image_id', $image_id, PDO::PARAM_STR);
+                    $name->bindParam(':uri', $input['uri'], PDO::PARAM_STR);
+                    $name->bindParam(':uri_template', $input['uri_template'], PDO::PARAM_STR);
+                    $name->execute();
+                    header('Location:/'.$name_uri);
+                    }
+                catch (PDOException $e)
+                    {
+                    $_title = 'เพิ่มข้อมูลไม่ได้';
+                    $_error_message = 'เพิ่มข้อมูลไม่ได้ จากข้อผิดพลาด: ' . $e->getMessage();
+                    require_once 'Viewer/Error.php';
+                    }
+                break;
+            case 'delete':
+                $name_id = (int)getDatafromUri(3);
+                if($name_id)
+                    {
+                    $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_name_id=".$name_id);
+                    $chapters = $getchapter->fetchAll(PDO::FETCH_ASSOC);
+                    foreach ($chapters as $chapter)
+                        {
+                        foreach (toArray($chapter['ch_content']) as $image_id)
+                            $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
+                        $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$name_id);
+                        }
+                    $getname = $_database->query("select * from ".DB_PREFIX."name where na_id=".$name_id);
+                    $name = $getname->fetch(PDO::FETCH_ASSOC);
+                    $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$name['na_image_id']);
+                    $_database->query("delete from ".DB_PREFIX."name where ".DB_PREFIX."name.na_id=".$name_id);
+                    header('Location:'.$_SERVER['HTTP_REFERER']);
+                    }
+                break;
+            default :
+                $_title = 'ไม่พบหน้าที่ร้องขอมา';
+                $_error_message = 'ไม่พบการกระทำหรือคุณไม่มีสิทธิ์เข้าถึงหน้าดังกล่าว';
+                require_once 'Viewer/Error.php';
+                break;
             }
         break;
 
-    case 'addname':
-        try
-            {
-            CreateDirectory($_settings['cache_directory']);
-            $filename = $_settings['cache_directory'].'/temp_cover.jpg';
-            move_uploaded_file($_FILES['cover']['tmp_name'], $filename);
-            $cover = file_get_contents($filename);
-            $sql = "insert into cv_image (im_id, im_image, im_type) values (null, ?, ?)";
-            $img = $_database->prepare($sql);
-            $img->bindParam(1, $cover, PDO::PARAM_LOB);
-            $img->bindValue(2, 'jpg', PDO::PARAM_STR);
-            $img->execute();
-            $img_id = $_database->lastInsertId();
-            $input['name'] = trim($input['name']);
-            $name_uri = NametoUri($input['name']);
-            $input['details']= trim($input['details']);
-            $sql = "insert into ".DB_PREFIX."name (na_id, na_sub_id, na_name, na_name_uri, na_detail, na_image_id, na_uri, na_uri_template, na_last, na_end, na_date) values (null, ?, ?, ?, ?,?, ?, ?, null, '0', CURRENT_TIMESTAMP)";
-            $name = $_database->prepare($sql);
-            $name->bindParam(1, $input['sub_id'], PDO::PARAM_INT);
-            $name->bindParam(2, $input['name'], PDO::PARAM_STR);
-            $name->bindParam(3, $name_uri, PDO::PARAM_STR);
-            $name->bindParam(4, $input['details'], PDO::PARAM_STR);
-            $name->bindParam(5, $img_id, PDO::PARAM_STR);
-            $name->bindParam(6, $input['uri'], PDO::PARAM_STR);
-            $name->bindParam(7, $input['uri_template'], PDO::PARAM_STR);
-            $name->execute();
-            $_database->lastInsertId();
-            header('Location:/'.$name_uri);
-        }
-        catch (PDOException $e)
-        {
-            echo 'เพิ่มข้อมูลไม่ได้ จากข้อผิดพลาด: ' . $e->getMessage();
-        }
-        break;
-
     case 'unread':
-        $chapter_id = getDatafromUri(2);
+        $chapter_id = (int)getDatafromUri(2);
         $_database->query("update ".DB_PREFIX."chapter set ch_readed=0 where ch_id=".$chapter_id);
         header('Location:'.$_SERVER['HTTP_REFERER']);
         break;
 
     case 'crop':
-        //var_dump($input);
-        $getid = $_database->query("select * from ".DB_PREFIX."image where im_id=".$input['image_id']);
+        $getid = $_database->query("select * from ".DB_PREFIX."image where im_id=".(int)$input['image_id']);
         $imagesource = $getid->fetch(PDO::FETCH_ASSOC);
         $img = imagecreatefromstring($imagesource['im_image']);
         $image = new PHPImage();
@@ -151,7 +232,7 @@ switch ($action)
         break;
 
     case 'exportchapter' :
-        $chapter_id = getDatafromUri(2);
+        $chapter_id = (int)getDatafromUri(2);
         CreateDirectory($_settings['export_directory']);
         if($chapter_id)
             {
@@ -178,12 +259,14 @@ switch ($action)
             }
         else
             {
-            echo 'ตอนไม่ถูกต้อง';
+            $_title = 'ส่งออกไม่ได้';
+            $_error_message = 'ส่งออกไม่ได้เนื่องจากตอนไม่ถูกต้อง';
+            require_once 'Viewer/Error.php';
             }
         break;
 
     case 'exportname' :
-        $name_id = getDatafromUri(2);
+        $name_id = (int)getDatafromUri(2);
         CreateDirectory($_settings['export_directory']);
         if($name_id)
             {
@@ -213,7 +296,9 @@ switch ($action)
             }
         else
             {
-            echo 'ชื่อเรื่องไม่ถูกต้อง';
+            $_title = 'ส่งออกไม่ได้';
+            $_error_message = 'ส่งออกไม่ได้เนื่องจากชื่อเรื่องไม่ถูกต้อง';
+            require_once 'Viewer/Error.php';
             }
         break;
 
@@ -248,7 +333,9 @@ switch ($action)
         break;
 
     default:
-        echo 'ไม่ได้เลือกการกระทำ';
+        $_title = 'ไม่พบหน้าที่ร้องขอมา';
+        $_error_message = 'ไม่พบการกระทำหรือคุณไม่มีสิทธิ์เข้าถึงหน้าดังกล่าว';
+        require_once 'Viewer/Error.php';
         break;
 
     }

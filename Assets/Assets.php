@@ -45,7 +45,7 @@ $_module['js'][] = 'jquery.tabledit.js';
 $_module['script'] = 
     '
     $("#chapter").Tabledit({
-        url: "/api",
+        url: "'.URI_PATH.'/api",
         editButton: false,
         deleteButton: false,
         hideIdentifier: true,
@@ -145,12 +145,34 @@ $_module['js'][] = 'jquery.lazyload.js';
 $_module['script'] = 
     '
     $("img.lazy").lazyload({
-         placeholder: "/Assets/common/img/preloader.gif",
+         placeholder: "'.URI_PATH.'/Assets/common/img/preloader.gif",
          effect : "fadeIn",
     });
     ';
 $_assetmodule['lazyload'] = $_module;
 
+###########   ############
+$_module = array();
+$_module['script'] = 
+    '
+    function readURL(input) {
+        var url = input.value;
+        var ext = url.substring(url.lastIndexOf(".") + 1).toLowerCase();
+        if (input.files && input.files[0]&& (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $("#preview").attr("src", e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }else{
+             $("#preview").attr("src", "'.URI_PATH.'/image/2");
+        }
+    }
+    $("#cover").change(function(){
+        readURL(this);
+    });
+    ';
+$_assetmodule['uploadPreview'] = $_module;
 
 /*
 ###########   ############
