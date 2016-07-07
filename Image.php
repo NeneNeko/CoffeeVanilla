@@ -34,21 +34,21 @@ switch ($image['im_type'])
         break;
     }
 
-$hashID = md5($image['im_image']);
-$expireTime = time() + eval('return '.$_settings['cache_time'].';');
-$wasUpdated = (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) and 
+$hash_id = md5($image['im_image']);
+$expire_time = time() + eval('return '.$_settings['cache_time'].';');
+$was_updated = (isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) and 
     strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE']) == strtotime($image['im_date']));
-$IDsMatch = (isset($_SERVER['HTTP_IF_NONE_MATCH']) and 
-    $hashID == $_SERVER['HTTP_IF_NONE_MATCH']);
+$match_id = (isset($_SERVER['HTTP_IF_NONE_MATCH']) and 
+    $hash_id == $_SERVER['HTTP_IF_NONE_MATCH']);
 
 header('Content-Type: '.$mimetype);
-header('Cache-Control: max-age='.$expireTime);
-header('Expires: '.gmdate('D, d M Y H:i:s', $expireTime).' GMT');
+header('Cache-Control: max-age='.$expire_time);
+header('Expires: '.gmdate('D, d M Y H:i:s', $expire_time).' GMT');
 header('Last-Modified: '.gmdate('D, d M Y H:i:s', strtotime($image['im_date'])).' GMT');
-header('Etag: '.$hashID);
+header('Etag: '.$hash_id);
 header_remove('Pragma');
 
-if ($wasUpdated or $IDsMatch)
+if ($was_updated and $match_id)
     {
     header('HTTP/1.1 304 Not Modified');
     header('Connection: close');

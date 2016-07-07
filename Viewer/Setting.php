@@ -18,6 +18,7 @@ switch ($action)
             echo '<div class="contents">', EOL;
             echo '<div class="index">', EOL;
             echo '<ul class="article-list">', EOL;
+            /*
             echo '<li><div id="debug" contenteditable data-name="custom-text">'.$name['na_detail'].'</div> <a href="'.$name['na_uri'].'" target="_blank" title="ไปยังเว็ปที่มา"><i class="fa fa-globe"></i></a></li>', EOL;
             $getname = $_database->query("select * from ".DB_PREFIX."name where na_sub_id=".$name['na_id']." order by na_name asc");
             foreach ($getname->fetchAll(PDO::FETCH_ASSOC) as $subname)
@@ -29,6 +30,7 @@ switch ($action)
                 echo '<time>'.DateFormat($subname['na_date']).'</time></li>', EOL;
                 }
             echo '</ul>', EOL;
+            */
             echo '<table id="chapter">';
             echo '<thead><tr>';
             echo '<th style="display: none;">#</th>';
@@ -71,7 +73,7 @@ switch ($action)
             echo '<ul class="article-list">', EOL;
             echo '<li><i class="fa fa-plus"></i> <a href="'.URI_PATH.'/setting/name/add">เพิ่มเรื่องใหม่</a></li>', EOL;
             echo '<li><i class="fa fa-plus"></i> <a href="'.URI_PATH.'/setting/chapter/add">เพิ่มตอนใหม่</a></li>', EOL;
-            $getname = $_database->query("select * from ".DB_PREFIX."name where na_sub_id=0 order by na_name asc");
+            $getname = $_database->query("select * from ".DB_PREFIX."name order by na_name asc");
             foreach ($getname->fetchAll(PDO::FETCH_ASSOC) as $name)
                 {
                 echo '<li><a href="/api/exportname/'.$name['na_id'].'" title="บันทึกเป็นไฟล์เรื่อง"><i class="fa fa-floppy-o"></i> </a>';
@@ -118,9 +120,9 @@ switch ($action)
             //echo '<td style="text-align: center">'.$db_infomation['Engine'].'</td>';
             echo '<td style="text-align: center">'.DateFormat($db_infomation['Update_time']).'</td>';
             echo '<td style="text-align: right;">'.number_format($db_infomation['Rows']).'</td>';
-            echo '<td style="text-align: right;">'.FileSizeConvert($db_infomation['Data_length']).'</td>';
-            echo '<td style="text-align: right;">'.FileSizeConvert($db_infomation['Index_length']).'</td>';
-            echo '<td style="text-align: right;">'.FileSizeConvert($db_infomation['Data_free']).'</td>';
+            echo '<td style="text-align: right;">'.filesizeConvert($db_infomation['Data_length']).'</td>';
+            echo '<td style="text-align: right;">'.filesizeConvert($db_infomation['Index_length']).'</td>';
+            echo '<td style="text-align: right;">'.filesizeConvert($db_infomation['Data_free']).'</td>';
             echo '</tr>', EOL;
             $data_length_total += $db_infomation['Data_length'];
             $Index_length_total +=$db_infomation['Index_length'];
@@ -129,13 +131,13 @@ switch ($action)
             }
         echo '<tr>';
         echo '<td>รวม</td>';
-        echo '<td>'.FileSizeConvert($data_length_total+$Index_length_total+$data_free_total).'</td>';
+        echo '<td>'.filesizeConvert($data_length_total+$Index_length_total+$data_free_total).'</td>';
         //echo '<td></td>';
         echo '<td></td>';
         echo '<td style="text-align: right;">'.number_format($row_total).'</td>';
-        echo '<td style="text-align: right;">'.FileSizeConvert($data_length_total).'</td>';
-        echo '<td style="text-align: right;">'.FileSizeConvert($Index_length_total).'</td>';
-        echo '<td style="text-align: right;">'.FileSizeConvert($data_free_total).'</td>';
+        echo '<td style="text-align: right;">'.filesizeConvert($data_length_total).'</td>';
+        echo '<td style="text-align: right;">'.filesizeConvert($Index_length_total).'</td>';
+        echo '<td style="text-align: right;">'.filesizeConvert($data_free_total).'</td>';
         echo '</tr>', EOL;
         echo '</tbody></table>', EOL;
         echo '</div>', EOL;
@@ -204,7 +206,7 @@ switch ($action)
         echo '<li><span class="left w200">ชื่อ : </span><input type="text" name="name" value="'.$namedata['na_name'].'" class="w400"></li>', EOL;
         if($mode=='edit')
             echo '<li><span class="left w200">ชื่อแบบย่อ : </span><input type="text" name="name_uri" value="'.$namedata['na_name_uri'].'" class="w400"></li>', EOL;
-        echo '<li><span class="left w200">รูปปก : </span><label for="cover"><img id="preview" src="'.$image_cover .'" alt="Cover" /></label><input type="file" name="cover" id="cover" class="w400"></li>', EOL;
+        echo '<li><span class="left w200">รูปปก : </span><label for="cover"><img id="preview" src="'.$image_cover .'" alt="Cover" /></label><input type="file" name="cover" id="cover" style="display:none" class="w400"></li>', EOL;
         echo '<li><span class="left w200">รายละเอียด : </span><textarea  name="details" style="width:400px;height:200px">'.htmlentities($namedata['na_detail']).'</textarea></li>', EOL;
         echo '<li><span class="left w200">เว็ปไซต์ : </span><input type="text" name="uri" value="'.$namedata['na_uri'].'" class="w400"></li>', EOL;
         echo '<li><span class="left w200">แม่แบบลิ้ง : </span><input type="text" name="uri_template" value="'.$namedata['na_uri_template'].'" class="w400"></li>', EOL;
@@ -357,15 +359,15 @@ switch ($action)
         echo '<div>&nbsp;</div>', EOL;
         echo '<ul class="article-list">', EOL;
         echo '<li><h2>Libraries</h2></li>', EOL;
-        echo '<li>JQuery v2.2.3 - <a href="http://jquery.com" target="_blank">http://jquery.com</a></li>', EOL;
-        echo '<li>Tabledit v1.2.3 - <a href="http://markcell.github.io/jquery-tabledit" target="_blank">http://markcell.github.io/jquery-tabledit</a></li>', EOL;
-        echo '<li>prettyPhoto v3.1.6 - <a href="https://github.com/scaron/prettyphoto" target="_blank">https://github.com/scaron/prettyphoto</a></li>', EOL;
-        echo '<li>Jcrop v0.9.12 - <a href="http://deepliquid.com/content/Jcrop.html" target="_blank">http://deepliquid.com/content/Jcrop.html</a></li>', EOL;
-        echo '<li>Font Awesome v4.5.0 - <a href="http://fontawesome.io" target="_blank">http://fontawesome.io</a></li>', EOL;
-        echo '<li>Pace v1.0.2 - <a href="http://github.hubspot.com/pace" target="_blank">http://github.hubspot.com/pace</a></li>', EOL;
-        echo '<li>Lazy Load v1.9.5 - <a href="http://www.appelsiini.net/projects/lazyload" target="_blank">http://www.appelsiini.net/projects/lazyload</a></li>', EOL;
-        echo '<li>Colortips v1.0.0 - <a href="http://tutorialzine.com/2010/07/colortips-jquery-tooltip-plugin" target="_blank">http://tutorialzine.com/2010/07/colortips-jquery-tooltip-plugin</a></li>', EOL;
-        echo '<li>php-image v0.5.0 - <a href="https://github.com/kus/php-image" target="_blank">https://github.com/kus/php-image</a></li>', EOL;
+        echo '<li>JQuery - <a href="http://jquery.com" target="_blank">http://jquery.com</a></li>', EOL;
+        echo '<li>Tabledit - <a href="http://markcell.github.io/jquery-tabledit" target="_blank">http://markcell.github.io/jquery-tabledit</a></li>', EOL;
+        echo '<li>prettyPhoto - <a href="https://github.com/scaron/prettyphoto" target="_blank">https://github.com/scaron/prettyphoto</a></li>', EOL;
+        echo '<li>Jcrop - <a href="http://deepliquid.com/content/Jcrop.html" target="_blank">http://deepliquid.com/content/Jcrop.html</a></li>', EOL;
+        echo '<li>Font Awesome - <a href="http://fontawesome.io" target="_blank">http://fontawesome.io</a></li>', EOL;
+        echo '<li>Pace - <a href="http://github.hubspot.com/pace" target="_blank">http://github.hubspot.com/pace</a></li>', EOL;
+        echo '<li>Lazy Load - <a href="http://www.appelsiini.net/projects/lazyload" target="_blank">http://www.appelsiini.net/projects/lazyload</a></li>', EOL;
+        echo '<li>Colortips - <a href="http://tutorialzine.com/2010/07/colortips-jquery-tooltip-plugin" target="_blank">http://tutorialzine.com/2010/07/colortips-jquery-tooltip-plugin</a></li>', EOL;
+        echo '<li>php-image - <a href="https://github.com/kus/php-image" target="_blank">https://github.com/kus/php-image</a></li>', EOL;
         echo '</ul>', EOL;
         echo '</div>', EOL;
         echo '<div class="clear"></div>', EOL;

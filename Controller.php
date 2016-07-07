@@ -56,8 +56,12 @@ switch ($action)
         $chapter_id = (int)getDatafromUri(2);
         if($chapter_id)
             {
-            $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_id=".$chapter_id);
+            $getchapter = $_database->query("select cv_name.na_id, cv_name.na_type, cv_name.na_name,
+            cv_chapter.ch_name_id, cv_chapter.ch_number, cv_chapter.ch_id, cv_chapter.ch_content
+            from cv_chapter inner join cv_name on cv_name.na_id=cv_chapter.ch_name_id
+            where cv_chapter.ch_id=".$chapter_id);
             $chapter = $getchapter->fetch(PDO::FETCH_ASSOC);
+            if($chapter['na_type'] == 'M')
             foreach (toArray($chapter['ch_content']) as $image_id)
                 $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
             $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$chapter_id);
@@ -67,7 +71,7 @@ switch ($action)
 
     case 'name':
         $mode = NametoUri(getDatafromUri(2));
-        CreateDirectory($_settings['cache_directory']);
+        createDirectory($_settings['cache_directory']);
         $filename = $_settings['cache_directory'].'/temp_cover.jpg';
         switch($mode)
             {
@@ -179,20 +183,37 @@ switch ($action)
                 $name_id = (int)getDatafromUri(3);
                 if($name_id)
                     {
+                    $getname = $_database->query("select * from ".DB_PREFIX."name where na_id=".$name_id);
+                    $name = $getname->fetch(PDO::FETCH_ASSOC);                       
                     $getchapter = $_database->query("select * from ".DB_PREFIX."chapter where ch_name_id=".$name_id);
                     $chapters = $getchapter->fetchAll(PDO::FETCH_ASSOC);
                     foreach ($chapters as $chapter)
                         {
-                        foreach (toArray($chapter['ch_content']) as $image_id)
-                            $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
+                        if($name['na_type'] == 'M')
+                            foreach (toArray($chapter['ch_content']) as $image_id)
+                                $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$image_id);
                         $_database->query("delete from ".DB_PREFIX."chapter where ".DB_PREFIX."chapter.ch_id=".$name_id);
                         }
-                    $getname = $_database->query("select * from ".DB_PREFIX."name where na_id=".$name_id);
-                    $name = $getname->fetch(PDO::FETCH_ASSOC);
+
                     $_database->query("delete from ".DB_PREFIX."image where ".DB_PREFIX."image.im_id=".$name['na_image_id']);
                     $_database->query("delete from ".DB_PREFIX."name where ".DB_PREFIX."name.na_id=".$name_id);
                     header('Location:'.$_SERVER['HTTP_REFERER']);
                     }
+                break;
+            default :
+                $_title = 'ไม่พบหน้าที่ร้องขอมา';
+                $_error_message = 'ไม่พบการกระทำหรือคุณไม่มีสิทธิ์เข้าถึงหน้าดังกล่าว';
+                require_once 'Viewer/Error.php';
+                break;
+            }
+        break;
+
+    case 'import':
+        $chapter_id = (int)getDatafromUri(2);
+        switch($chapter_id)
+            {
+            case 'Novel':
+
                 break;
             default :
                 $_title = 'ไม่พบหน้าที่ร้องขอมา';

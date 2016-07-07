@@ -5,10 +5,12 @@
     padding: 0;
     vertical-align: baseline
 }
+
 ol,
 ul {
     list-style: none
 }
+
 table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -17,6 +19,7 @@ table {
     margin-bottom: 20px;
     width: 100%
 }
+
 caption,
 th,
 td {
@@ -24,10 +27,12 @@ td {
     text-align: left;
     vertical-align: middle
 }
+
 q,
 blockquote {
     quotes: none
 }
+
 body {
     background-color: #f5f5f5;
     color: #666;
@@ -35,16 +40,20 @@ body {
     font-size: 16px;
     line-height: 1.5
 }
+
 a {
     color: #28a2b8;
     text-decoration: none
 }
+
 th {
     text-align: left
 }
+
 a img {
     border: none
 }
+
 table > thead > tr > th,
 table > tbody > tr > th,
 table > tfoot > tr > th,
@@ -56,20 +65,24 @@ table > tfoot > tr > td {
     padding: 8px;
     vertical-align: top
 }
+
 table > thead > tr > th {
     border-bottom: 2px solid #ddd;
     vertical-align: bottom
 }
+
 .container_12 {
     margin: auto;
     max-width: 960px;
     min-width: 800px;
     width: 80%
 }
+
 .row {
     margin-right: -15px;
     margin-left: -15px
 }
+
 .banner {
     background-color: #54c5d9;
     background-size: cover;
@@ -82,43 +95,53 @@ table > thead > tr > th {
     width: 100%;
     z-index: -2
 }
+
 .clear {
     clear: both
 }
+
 .header {
+    position: fixed;
     background-color: #454545;
     box-shadow: #000 0 3px 30px;
     font-family: "Noto Sans", "Open Sans", Helvetica;
     width: 100%;
     z-index: 100
 }
+
 .highlight-image {
     height: 200px
 }
+
 .article {
     padding: 10px;
     width: 95%
 }
+
 .archive-link {
     float: right;
     margin-top: 10px;
     margin-right: 10px;
     width: 95px
 }
+
 header.title {
     margin-bottom: 10px;
     padding: 10px
 }
+
 q:before,
 q:after,
 blockquote:before,
 blockquote:after {
     content: none
 }
+
 section.main {
     position: relative;
     z-index: 2
 }
+
 table > caption + thead > tr:first-child > th,
 table > colgroup + thead > tr:first-child > th,
 table > thead:first-child > tr:first-child > th,
@@ -127,74 +150,90 @@ table > colgroup + thead > tr:first-child > td,
 table > thead:first-child > tr:first-child > td {
     border-top: 0
 }
+
 table table {
     background-color: #fff
 }
+
 table > tbody + tbody {
     border-top: 2px solid #ddd
 }
+
 .title h1 {
     font-weight: 700;
     font-size: 2.2em;
-    margin-bottom: 10px
+    margin-bottom: 5px
 }
+
 .title time {
     font-size: 0.9em
 }
+
 .article h1 {
     font-size: 2em;
     margin: 20px auto 50px;
     text-align: center
 }
+
 .article h1,
 .article h2 {
     display: block;
     font-weight: 700;
     width: 100%
 }
+
 .article h2 {
     border-bottom: 1px #ccc solid;
     font-size: 1.75em
 }
+
 .article h2,
 .article h3 {
     margin: 5px auto 10px;
     padding: 10px 0
 }
+
 .article h3 {
     font-size: 1.5em
 }
+
 .article h3,
 .article h4 {
     display: block;
     font-weight: 700;
     width: 100%
 }
+
 .article h4 {
     font-size: 1.25em;
     margin: 5px auto 10px;
     padding: 10px 0
 }
+
 .article p {
     line-height: 170%;
     margin: 15px auto;
     text-align: justify;
     white-space: pre-wrap
 }
+
 .article a {
     display: inline-block;
     margin: 0 3px
 }
+
 .article a,
 .article a:hover {
     color: #28a2b8;
     text-decoration: none
 }
+
 .article ul,
 .article ol {
     line-height: 1.7;
     margin: 15px 25px
 }
+
 .article pre {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -205,6 +244,7 @@ table > tbody + tbody {
     margin: 20px 0;
     overflow: auto
 }
+
 .article blockquote {
     border-left: 5px solid #ccc;
     font-size: 90%;
@@ -213,15 +253,18 @@ table > tbody + tbody {
     margin: 10px 0 10px 25px;
     padding: 10px 15px
 }
+
 .article img {
     max-width: 100%
 }
+
 .archives-title h1 {
     font-size: 2.2em;
     font-weight: 700;
     margin-bottom: 5px;
     padding: 10px
 }
+
 .archive-list h2 {
     font-weight: 700;
     font-size: 1.8em;
@@ -229,12 +272,15 @@ table > tbody + tbody {
     margin: 15px 0;
     padding-left: 10px
 }
+
 .archive-list li {
     padding: 10px
 }
+
 .archive-link i {
     margin-right: 5px
 }
+
 .article p code {
     background-color: #fff;
     border: 1px solid #bbb;
@@ -245,32 +291,39 @@ table > tbody + tbody {
     padding: 3px 5px;
     vertical-align: top
 }
+
 .article ul li,
 .article ol li {
     list-style: disc;
     margin: 10px 0
 }
+
 .article pre code {
     border: none;
     font-size: 16px;
     margin: 0;
     padding: 5px
 }
+
 .archive-list h2 span {
     color: #ddd
 }
+
 .archive-list li time {
     float: right
 }
+
 .archive-list li+li {
     border-top: 1px solid #ededed
 }
+
 .article ul li ul li,
 .article ul li ol li,
 .article ol li ul li,
 .article ol li ol li {
     list-style: circle
 }
+
 .container_12 .grid_1,
 .container_12 .grid_2,
 .container_12 .grid_3,
@@ -286,77 +339,100 @@ table > tbody + tbody {
     float: left;
     padding: 0 10px
 }
+
 .container_12 .grid_1 {
     width: 8.333333333333332%
 }
+
 .container_12 .grid_2 {
     width: 16.666666666666664%
 }
+
 .container_12 .grid_3 {
     width: 25%
 }
+
 .container_12 .grid_4 {
     width: 33.33333333333333%
 }
+
 .container_12 .grid_5 {
     width: 41.66666666666667%
 }
+
 .container_12 .grid_6 {
     width: 50%
 }
+
 .container_12 .grid_7 {
     width: 58.333333333333336%
 }
+
 .container_12 .grid_8 {
     width: 66.66666666666666%
 }
+
 .container_12 .grid_9 {
     width: 75%
 }
+
 .container_12 .grid_10 {
     width: 83.33333333333334%
 }
+
 .container_12 .grid_11 {
     width: 91.66666666666666%
 }
+
 .container_12 .grid_12 {
     width: 100%
 }
+
 .container_12 .right {
     float: right
 }
+
 .header .navigation {
     height: 40px;
     margin: 0 auto
 }
+
 .header .social {
     text-align: right
 }
+
 .header .navigation ul,
 .header .navigation ul li {
     float: left
 }
+
 footer.footer {
     background-color: #383838;
     margin-top: 30px;
     width: 100%
 }
+
 ul.article-list li {
     padding: 10px
 }
+
 ul.article-list li time {
     float: right
 }
+
 ul.article-list li+li {
     border-top: 1px solid #ededed
 }
+
 .header .social span {
     line-height: 40px
 }
+
 section.main .area-header {
     height: 110px;
     position: relative
 }
+
 section.main .block-contents {
     -webkit-box-shadow: 1px 1px 3px #d9d9d9;
     -moz-box-shadow: 1px 1px 3px #d9d9d9;
@@ -366,12 +442,15 @@ section.main .block-contents {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
 footer.footer .footer-content {
-    height: 45px
+    height: 40px
 }
+
 .header .social span a {
     margin-left: 3px
 }
+
 .header .navigation ul li a {
     border-left: 1px solid #5c5c5c;
     color: #cfcfcf;
@@ -380,9 +459,11 @@ footer.footer .footer-content {
     line-height: 40px;
     padding: 0 1.75em
 }
+
 .header .social span a i {
     color: #a1a1a1
 }
+
 section.main .block-contents .bg-contents {
     background: #fff;
     height: 100%;
@@ -395,48 +476,59 @@ section.main .block-contents .bg-contents {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
+
 section.main .block-contents .contents {
     z-index: 5
 }
+
 footer.footer .footer-content .copyright {
     text-align: right
 }
+
 .header .navigation section.logo a {
     color: #cfcfcf;
     display: block;
     line-height: 40px;
     text-align: center
 }
+
 .header .navigation ul li:first-child {
     border-left: 1px solid #303030
 }
+
 .header .navigation ul li:last-child {
     border-right: 1px solid #5c5c5c
 }
+
 section.main .block-contents h1.title {
     font-size: 2em;
     font-weight: 700;
     margin-bottom: 0.5em;
     padding: 0 10px .5em
 }
+
 footer.footer .footer-content .copyright span {
     color: #a1a1a1;
     font-size: 14px;
-    line-height: 45px
+    line-height: 40px
 }
+
 .header .navigation ul li a:hover,
 .header .navigation ul li a:focus,
 .header .navigation ul li a.current {
     background-color: #333;
     border-left: 1px solid #333
 }
+
 .header .navigation ul li a:last-child {
     border-right: 1px solid #303030
 }
+
 footer.footer .footer-content .copyright span a {
     color: #a1a1a1;
     font-weight: 700
 }
+
 @media screen and (max-width: 800px) {
     .row {
         margin: 0
@@ -492,8 +584,10 @@ footer.footer .footer-content .copyright span a {
     }
 }
 
-
-input[type=text], input[type=password], input[type=file], select{
+input[type=text],
+input[type=password],
+input[type=file],
+select {
     margin-bottom: 5px;
     font-size: 14px;
     margin-left: 5px;
@@ -504,15 +598,21 @@ input[type=text], input[type=password], input[type=file], select{
     -moz-border-radius: 2px;
     border-radius: 2px;
 }
-input[type=text]:hover, input[type=password]:hover, input[type=file]:hover, select:hover, textarea:hover
-{
-	border: 1px solid #9bc53d;
+
+input[type=text]:hover,
+input[type=password]:hover,
+input[type=file]:hover,
+select:hover,
+textarea:hover {
+    border: 1px solid #9bc53d;
 }
 
-input[type=checkbox], input[type=radio] {
+input[type=checkbox],
+input[type=radio] {
     height: 15px;
     width: 15px;
 }
+
 textarea {
     font-size: 14px;
     margin-left: 5px;
@@ -524,7 +624,8 @@ textarea {
     border-radius: 2px;
 }
 
-input[type=button].ui, input[type=submit].ui{
+input[type=button].ui,
+input[type=submit].ui {
     padding: 5px 10px 5px 10px;
     cursor: pointer;
     text-transform: capitalize;
@@ -540,34 +641,33 @@ input[type=button].ui, input[type=submit].ui{
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.1);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,.1);
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     border: 1px solid #999999;
 }
 
-input[type=button].ui-red{
-   	background: #d23328;
+input[type=button].ui-red {
+    background: #d23328;
     background: -moz-linear-gradient(#d23328, #b73022);
     background: -webkit-linear-gradient(#d23328, #b73022);
     background: -o-linear-gradient(#d23328, #b73022);
     background: -ms-linear-gradient(#d23328, #b73022);
     background: linear-gradient(#d23328, #b73022);
-	border-color: #b32f22;
-	color: white;
+    border-color: #b32f22;
+    color: white;
 }
 
-input[type=button].ui-blue{
-   	background: #178fdf;
+input[type=button].ui-blue {
+    background: #178fdf;
     background: -moz-linear-gradient(#178fdf, #1b7dbe);
-    background: -webkit-linear-gradient(#178fdf,#1b7dbe);
+    background: -webkit-linear-gradient(#178fdf, #1b7dbe);
     background: -o-linear-gradient(#178fdf, #1b7dbe);
     background: -ms-linear-gradient(#178fdf, #1b7dbe);
     background: linear-gradient(#178fdf, #1b7dbe);
-	border-color: #0d78c0;
-	color: white;
+    border-color: #0d78c0;
+    color: white;
 }
-
 
 input[type=button]:hover {
     color: #0a0a0a;
@@ -578,15 +678,15 @@ input[type=button]:hover {
     background: -o-linear-gradient(#fdfdfd, #e3e3e3);
     background: -ms-linear-gradient(#fdfdfd, #e3e3e3);
     background: linear-gradient(#fdfdfd, #e3e3e3);
-    -webkit-box-shadow: 0 0 5px rgba(0,0,0,.3);
-    -moz-box-shadow: 0 0 5px rgba(0,0,0,.3);
-    box-shadow: 0 0 5px rgba(0,0,0,.3);
+    -webkit-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+    -moz-box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
 }
 
-input[type=button].ui-red:hover{
-	color: white;
-	border-color: #9c281f;
-   	background: #d23328;
+input[type=button].ui-red:hover {
+    color: white;
+    border-color: #9c281f;
+    background: #d23328;
     background: -moz-linear-gradient(#d23328, #af2c21);
     background: -webkit-linear-gradient(#d23328, #af2c21);
     background: -o-linear-gradient(#d23328, #af2c21);
@@ -594,24 +694,25 @@ input[type=button].ui-red:hover{
     background: linear-gradient(#d23328, #af2c21);
 }
 
-input[type=button].ui-blue:hover{
-   	background: #178fdf;
+input[type=button].ui-blue:hover {
+    background: #178fdf;
     background: -moz-linear-gradient(#178fdf, #1b7dbe);
-    background: -webkit-linear-gradient(#178fdf,#1b7dbe);
+    background: -webkit-linear-gradient(#178fdf, #1b7dbe);
     background: -o-linear-gradient(#178fdf, #1b7dbe);
     background: -ms-linear-gradient(#178fdf, #1b7dbe);
     background: linear-gradient(#178fdf, #1b7dbe);
-	border-color: #0d78c0;
-	color: white;
+    border-color: #0d78c0;
+    color: white;
 }
 
 input[type=button]:active {
-    -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,.3);
-    -moz-box-shadow: inset 0 0 5px rgba(0,0,0,.3);
-    box-shadow: inset 0 0 5px rgba(0,0,0,.3);
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, .3);
+    -moz-box-shadow: inset 0 0 5px rgba(0, 0, 0, .3);
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, .3);
 }
 
-input[disabled=disabled], input[disabled=disabled]:hover {
+input[disabled=disabled],
+input[disabled=disabled]:hover {
     margin-left: 5px;
     padding: 5px 10px 5px 10px;
     background: #f8f8f8;
@@ -620,9 +721,9 @@ input[disabled=disabled], input[disabled=disabled]:hover {
     background: -o-linear-gradient(#f8f8f8, #dedede);
     background: -ms-linear-gradient(#f8f8f8, #dedede);
     background: linear-gradient(#f8f8f8, #dedede);
-    -webkit-box-shadow: 0 0 10px rgba(0,0,0,.1);
-    -moz-box-shadow: 0 0 10px rgba(0,0,0,.1);
-    box-shadow: 0 0 10px rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    -moz-box-shadow: 0 0 10px rgba(0, 0, 0, .1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, .1);
     -webkit-border-radius: 2px;
     -moz-border-radius: 2px;
     border-radius: 2px;
@@ -632,17 +733,25 @@ input[disabled=disabled], input[disabled=disabled]:hover {
 }
 
 .status {
-    display:none;
-    position: fixed;   /* Take it out of the flow of the document */
-    left: 0;           /* Left edge at left for now */
-    right: 0;          /* Right edge at right for now, so full width */ 
-    top: 50px;         /* Move it down from top of window */
-    width: 500px;      /* Give it the desired width */ 
-    margin: auto;      /* Center it */
-    max-width: 100%;   /* Make it fit window if under 500px */ 
-    z-index: 10000;    /* Whatever needed to force to front (1 might do) */
+    display: none;
+    position: fixed;
+    /* Take it out of the flow of the document */
+    left: 0;
+    /* Left edge at left for now */
+    right: 0;
+    /* Right edge at right for now, so full width */
+    top: 50px;
+    /* Move it down from top of window */
+    width: 500px;
+    /* Give it the desired width */
+    margin: auto;
+    /* Center it */
+    max-width: 100%;
+    /* Make it fit window if under 500px */
+    z-index: 10000;
+    /* Whatever needed to force to front (1 might do) */
     background: rgba(255, 255, 255, 0.8);
-    border:1px solid #ffcc33;
+    border: 1px solid #ffcc33;
     text-align: center;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -651,13 +760,13 @@ input[disabled=disabled], input[disabled=disabled]:hover {
 .icon {
     float: left;
     text-align: center;
-    width:25px;
+    width: 25px;
 }
 
 #preview {
-    /*float: right;*/
-    width: 300px;
-    height: 400px;
+    float: right;
+    width: 140px;
+    height: 185px;
     border: 1px;
 }
 
@@ -701,11 +810,6 @@ input[disabled=disabled], input[disabled=disabled]:hover {
     -moz-border-radius: 5px;
     border-radius: 5px;
 }
-
-.ended{
-    background: #99ccff;
-}
-
 
 .ended {
     background: #99ccff;

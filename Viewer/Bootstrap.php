@@ -11,10 +11,25 @@ $_assets = array();
 $_mainmenu = array();
 $_fatalerror = false;
 
-require_once 'Config.php';
+require_once 'Viewer/Config.php';
 require_once 'Viewer/Function.php';
 require_once 'Viewer/Library/php-image/PHPImage.php';
-require_once 'Viewer/Library/parsedown/Parsedown.php';
+require_once 'Viewer/Library/htmlparser/htmlParser.php';
+require_once 'Viewer/Library/bbcodeparser/bbcodeparser.php';
+
+require_once 'Viewer/Assets.php';
+$_assets[] = 'font-awesome';
+$_assets[] = 'jquery';
+$_assets[] = 'colortip';
+$_assets[] = 'common';
+$_assets[] = 'pace';
+
+# เมนูหลักเริ่มต้นที่ลำดับ 1
+$_mainmenu[] = ['หน้าหลัก', URI_PATH.'/'];
+$_mainmenu[] = ['รายชื่อทั้งหมด', URI_PATH.'/all'];
+$_mainmenu[] = ['การตั้งค่า', URI_PATH.'/setting'];
+$_mainmenu[] = ['เกี่ยวกับ', URI_PATH.'/setting/about'];
+$_mainactive = '1';
 
 if(!in_array('mod_rewrite', apache_get_modules()))
     {
@@ -42,16 +57,3 @@ catch (PDOException $e)
     require_once 'Viewer/Error.php';
     }
 
-require_once 'Assets/Assets.php';
-$_assets[] = 'font-awesome';
-$_assets[] = 'jquery';
-$_assets[] = 'colortip';
-$_assets[] = 'common';
-$_assets[] = 'pace';
-
-# เมนูหลักเริ่มต้นที่ลำดับ 1
-$_mainmenu[] = ['หน้าหลัก', URI_PATH.'/'];
-$_mainmenu[] = ['รายชื่อทั้งหมด', URI_PATH.'/all'];
-$_mainmenu[] = ['การตั้งค่า', URI_PATH.'/setting'];
-$_mainmenu[] = ['เกี่ยวกับ', URI_PATH.'/setting/about'];
-$_mainactive = '1';

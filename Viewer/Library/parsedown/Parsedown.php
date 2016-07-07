@@ -297,7 +297,7 @@ class Parsedown
         {
             return;
         }
-
+        /*
         if ($Line['indent'] >= 4)
         {
             $text = substr($Line['body'], 4);
@@ -315,6 +315,7 @@ class Parsedown
 
             return $Block;
         }
+        */
     }
 
     protected function blockCodeContinue($Line, $Block)
